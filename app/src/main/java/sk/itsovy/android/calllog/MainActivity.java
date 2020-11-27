@@ -7,6 +7,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -66,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initPhoneNumbers() {
-        final TextView textView = findViewById(R.id.callsTextView);
+        RecyclerView recyclerView = findViewById(R.id.callsRecyclerView);
+        final CallsAdapter adapter = new CallsAdapter();
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         ViewModelProvider provider = new ViewModelProvider(this);
         CallsViewModel model = provider.get(CallsViewModel.class);
@@ -76,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Call> calls) {
                 if (calls != null) {
-                    textView.setText(calls.toString());
+                    adapter.setCalls(calls);
                 }
             }
         });
