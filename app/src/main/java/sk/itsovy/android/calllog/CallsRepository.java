@@ -38,6 +38,8 @@ public class CallsRepository {
                 // prihlasenie posluchaca na zmeny v datach o telefonatoch
                 context.getContentResolver().registerContentObserver(CallLog.Calls.CONTENT_URI,
                         true, observer);
+                // nech sa nacitaju data aj pri zaregistrovani obervera - teda pri spusteni
+                observer.onChange(true);
             }
 
             @Override
