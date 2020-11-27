@@ -2,8 +2,11 @@ package sk.itsovy.android.calllog;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.provider.CallLog;
+
+import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,36 @@ public class CallsRepository {
     public CallsRepository(Context context) {
         this.context = context;
     }
+
+    public LiveData<List<Call>> getLiveData() {
+        return new LiveData<List<Call>>() {
+            private ContentObserver observer;
+
+            @Override
+            protected void onActive() {
+                observer = new ContentObserver(null) {
+
+                    // metoda sa zavola ked sa zmenia udaje o telefonatoch
+                    @Override
+                    public void onChange(boolean selfChange) {
+                        //1. nacitam si nove udaje o telefonatoch - loadCalls
+                        //2. zmenim live data
+                        postValue(loadCalls());
+                    }
+                };
+                // prihlasenie posluchaca na zmeny v datach o telefonatoch
+                context.getContentResolver().registerContentObserver(CallLog.Calls.CONTENT_URI,
+                        true, observer);
+            }
+
+            @Override
+            protected void onInactive() {
+                // odhlasenie posluchaca, ked sa odhlasi posluchac na live data
+                context.getContentResolver().unregisterContentObserver(observer);
+            }
+        };
+    }
+
 
     public List<Call> loadCalls() {
         ContentResolver contentResolver = context.getContentResolver();

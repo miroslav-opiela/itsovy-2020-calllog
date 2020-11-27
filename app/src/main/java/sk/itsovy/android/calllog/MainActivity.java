@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
@@ -64,14 +66,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initPhoneNumbers() {
-        TextView textView = findViewById(R.id.callsTextView);
+        final TextView textView = findViewById(R.id.callsTextView);
 
         ViewModelProvider provider = new ViewModelProvider(this);
         CallsViewModel model = provider.get(CallsViewModel.class);
 
-        List<Call> calls = model.getCalls();
-        if (calls != null) {
-            textView.setText(calls.toString());
-        }
+        LiveData<List<Call>> callsLiveData = model.getCalls();
+        callsLiveData.observe(this, new Observer<List<Call>>() {
+            @Override
+            public void onChanged(List<Call> calls) {
+                if (calls != null) {
+                    textView.setText(calls.toString());
+                }
+            }
+        });
+
     }
 }
