@@ -63,10 +63,13 @@ public class CallsRepository {
         }
         if (count > 0) {
             int idx = cursor.getColumnIndex(CallLog.Calls.NUMBER);
+            int typeIdx = cursor.getColumnIndex(CallLog.Calls.TYPE);
             while (cursor.moveToNext()) {
                 String number = cursor.getString(idx);
-                Call call = new Call(number);
+                int type = cursor.getInt(typeIdx);
+                Call call = new Call(number, type);
                 calls.add(call);
+
             }
         }
         if (cursor != null) {

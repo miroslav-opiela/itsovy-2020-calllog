@@ -11,4 +11,11 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:id="@+id/singleCallTextView" />
 
+    <TextView
+        android:paddingLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/callTypeTextView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
 </LinearLayout>
